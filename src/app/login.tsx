@@ -32,9 +32,12 @@ export default function LoginScreen() {
         <Formik
           initialValues={{ email: 'admin@doceria.com', senha: '123456' }}
           validationSchema={loginSchema}
-          onSubmit={(values) => {
+          onSubmit={(values, { setFieldError, setSubmitting }) => {
             if (values.email === 'admin@doceria.com' && values.senha === '123456') {
               router.replace('/(tabs)/home');
+            } else {
+              setFieldError('senha', 'E-mail ou senha incorretos.');
+              setSubmitting(false);
             }
           }}
         >
