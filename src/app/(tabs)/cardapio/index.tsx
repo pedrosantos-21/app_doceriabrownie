@@ -1,30 +1,26 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-
-const produtos = [
-  { nome: 'Brownie Tradicional', preco: 'R$ 22,00', tempo: '15 min' },
-  { nome: 'Bombom de Morango', preco: 'R$ 18,00', tempo: '10 min' },
-  { nome: 'Cookie de Chocolate', preco: 'R$ 20,00', tempo: '12 min' },
-  { nome: 'Cupcake de Baunilha', preco: 'R$ 16,00', tempo: '8 min' },
-];
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { products, money } from '../../../data/mock';
+import { Button } from '../../../components/ui';
 
 export default function CardapioTab() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Cardápio</Text>
-      <Text style={styles.subtitle}>Seleção especial da semana</Text>
+      <View style={styles.titleRow}><Text style={styles.subtitle}>Seleção especial da semana</Text><Button label="Novo item" icon="plus" onPress={() => router.push('/(tabs)/cardapio/novo' as never)} /></View>
 
-      {produtos.map((item) => (
-        <View key={item.nome} style={styles.card}>
-          <View style={styles.imagePlaceholder} />
+      {products.map((item) => (
+        <Pressable key={item.id} onPress={() => router.push(`/(tabs)/cardapio/novo?id=${item.id}` as never)} style={styles.card}>
+          <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}><Text style={styles.imageText}>DB</Text></View>
           <View style={styles.cardContent}>
-            <Text style={styles.nome}>{item.nome}</Text>
-            <Text style={styles.meta}>Tempo de preparo: {item.tempo}</Text>
+            <Text style={styles.nome}>{item.name}</Text>
+            <Text style={styles.meta}>Tempo de preparo: {item.prepTime}</Text>
             <View style={styles.footer}>
-              <Text style={styles.preco}>{item.preco}</Text>
+              <Text style={styles.preco}>{money(item.price)}</Text>
               <Text style={styles.pill}>Disponível</Text>
             </View>
           </View>
-        </View>
+        </Pressable>
       ))}
     </ScrollView>
   );
@@ -50,6 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 18,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+  },
   card: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -65,6 +67,13 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 100,
     backgroundColor: '#f6d7c2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageText: {
+    color: '#fff2e8',
+    fontWeight: '900',
+    letterSpacing: 1,
   },
   cardContent: {
     flex: 1,

@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import * as Yup from 'yup';
+import { colors } from '../components/ui';
 
 const loginSchema = Yup.object({
   email: Yup.string().required('Informe seu e-mail.').email('Digite um e-mail válido.'),
@@ -19,6 +20,7 @@ const loginSchema = Yup.object({
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [clientMode, setClientMode] = useState(false);
 
   return (
     <KeyboardAvoidingView
@@ -26,15 +28,19 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.card}>
-        <Text style={styles.eyebrow}>Acesso do gestor</Text>
-        <Text style={styles.title}>Entrar na Doceria</Text>
+        <Text style={styles.eyebrow}>DOCERIA BROWNIE</Text>
+        <Text style={styles.title}>{clientMode ? 'Entrar para pedir' : 'Entrar no painel'}</Text>
+        <View style={styles.modeRow}>
+          <Pressable onPress={() => setClientMode(false)} style={[styles.mode, !clientMode && styles.modeActive]}><Text style={[styles.modeText, !clientMode && styles.modeTextActive]}>Gestor</Text></Pressable>
+          <Pressable onPress={() => setClientMode(true)} style={[styles.mode, clientMode && styles.modeActive]}><Text style={[styles.modeText, clientMode && styles.modeTextActive]}>Cliente</Text></Pressable>
+        </View>
 
         <Formik
           initialValues={{ email: 'admin@doceria.com', senha: '123456' }}
           validationSchema={loginSchema}
           onSubmit={(values, { setFieldError, setSubmitting }) => {
-            if (values.email === 'admin@doceria.com' && values.senha === '123456') {
-              router.replace('/(tabs)/home');
+            if ((!clientMode && values.email === 'admin@doceria.com' && values.senha === '123456') || clientMode) {
+              router.replace((clientMode ? '/(cliente)/cardapio' : '/(tabs)/home') as never);
             } else {
               setFieldError('senha', 'E-mail ou senha incorretos.');
               setSubmitting(false);
@@ -86,7 +92,7 @@ export default function LoginScreen() {
                 <Text style={styles.primaryButtonText}>{isSubmitting ? 'Entrando...' : 'Entrar'}</Text>
               </Pressable>
 
-              <Text style={styles.helperText}>Dica: use admin@doceria.com / 123456 para testar.</Text>
+              {clientMode ? <Pressable onPress={() => router.push('/cadastro' as never)}><Text style={styles.registerText}>Ainda não tenho cadastro</Text></Pressable> : <Text style={styles.helperText}>Use admin@doceria.com / 123456 para testar.</Text>}
             </View>
           )}
         </Formik>
@@ -127,6 +133,29 @@ const styles = StyleSheet.create({
   },
   form: {
     marginTop: 28,
+  },
+  modeRow: {
+    flexDirection: 'row',
+    backgroundColor: colors.pale,
+    borderRadius: 12,
+    padding: 4,
+    marginTop: 22,
+  },
+  mode: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderRadius: 9,
+  },
+  modeActive: {
+    backgroundColor: colors.white,
+  },
+  modeText: {
+    color: colors.muted,
+    fontWeight: '700',
+  },
+  modeTextActive: {
+    color: colors.accent,
   },
   inputGroup: {
     marginBottom: 18,
@@ -186,6 +215,13 @@ const styles = StyleSheet.create({
     marginTop: 16,
     color: '#7d5e57',
     fontSize: 12,
+    textAlign: 'center',
+  },
+  registerText: {
+    marginTop: 16,
+    color: colors.accent,
+    fontSize: 13,
+    fontWeight: '800',
     textAlign: 'center',
   },
 });

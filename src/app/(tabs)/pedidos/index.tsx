@@ -1,10 +1,6 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-
-const pedidos = [
-  { cliente: 'Maria', item: 'Brownie de nutella', status: 'Em preparo', valor: 'R$ 48,00' },
-  { cliente: 'Rafael', item: 'Cupcake de morango', status: 'Pronto', valor: 'R$ 33,00' },
-  { cliente: 'Laura', item: 'Cookie de chocolate', status: 'A caminho', valor: 'R$ 29,00' },
-];
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { orders, money } from '../../../data/mock';
 
 export default function PedidosTab() {
   return (
@@ -12,18 +8,18 @@ export default function PedidosTab() {
       <Text style={styles.title}>Pedidos</Text>
       <Text style={styles.subtitle}>Acompanhe a produção em tempo real</Text>
 
-      {pedidos.map((pedido) => (
-        <View key={pedido.cliente} style={styles.card}>
+      {orders.map((pedido) => (
+        <Pressable key={pedido.id} onPress={() => router.push(`/(tabs)/pedidos/${pedido.id}` as never)} style={styles.card}>
           <View>
-            <Text style={styles.cliente}>{pedido.cliente}</Text>
+            <Text style={styles.cliente}>{pedido.customer}</Text>
             <Text style={styles.item}>{pedido.item}</Text>
           </View>
 
           <View style={styles.rightSide}>
-            <Text style={styles.valor}>{pedido.valor}</Text>
+            <Text style={styles.valor}>{money(pedido.total)}</Text>
             <Text style={styles.status}>{pedido.status}</Text>
           </View>
-        </View>
+        </Pressable>
       ))}
     </ScrollView>
   );

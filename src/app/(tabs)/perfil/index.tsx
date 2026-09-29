@@ -19,8 +19,11 @@ export default function PerfilTab() {
         <Text style={styles.infoText}>Endereço: Rua do Chocolate, 45</Text>
       </View>
 
-      <Pressable style={styles.button} onPress={() => router.replace('/login')}>
-        <Text style={styles.buttonText}>Sair</Text>
+      <Pressable style={styles.button} onPress={() => router.push('/(tabs)/perfil/editar' as never)}>
+        <Text style={styles.buttonText}>Editar dados</Text>
+      </Pressable>
+      <Pressable style={[styles.button, styles.logoutButton]} onPress={() => router.replace('/login')}>
+        <Text style={[styles.buttonText, styles.logoutText]}>Sair</Text>
       </Pressable>
     </View>
   );
@@ -91,6 +94,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: 'center',
+  },
+  logoutButton: {
+    marginTop: 10,
+    backgroundColor: '#f1ddd7',
+  },
+  logoutText: {
+    color: '#ae5145',
   },
   buttonText: {
     color: '#fff',
