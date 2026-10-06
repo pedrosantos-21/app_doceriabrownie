@@ -1,7 +1,53 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { orders, money } from '../../../data/mock';
-import { colors, Header, Screen, styles as ui } from '../../../components/ui';
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { orders, money } from "../../../data/mock";
+import { colors, Header, Screen, styles as ui } from "../../../components/ui";
 
-export default function ClientOrders() { return <Screen><Header title="Meus pedidos" subtitle="Acompanhe tudo que já pediu" /><View style={styles.filter}><Text style={styles.filterActive}>Todos</Text><Text style={styles.filterText}>Em andamento</Text><Text style={styles.filterText}>Concluídos</Text></View>{orders.map((order) => <Pressable key={order.id} onPress={() => router.push(`/(cliente)/pedidos/${order.id}` as never)} style={ui.card}><View style={styles.top}><Text style={styles.number}>Pedido #{order.id}</Text><Text style={styles.status}>{order.status}</Text></View><Text style={styles.item}>{order.item}</Text><View style={styles.bottom}><Text style={styles.time}>{order.time}</Text><Text style={styles.total}>{money(order.total)}</Text></View></Pressable>)}</Screen>; }
-const styles = StyleSheet.create({ filter: { flexDirection: 'row', gap: 18, marginBottom: 20 }, filterActive: { color: colors.accent, fontWeight: '800' }, filterText: { color: colors.muted }, top: { flexDirection: 'row', justifyContent: 'space-between' }, number: { color: colors.ink, fontWeight: '800' }, status: { color: colors.green, fontSize: 12, fontWeight: '800' }, item: { color: colors.muted, marginTop: 12 }, bottom: { borderTopWidth: 1, borderTopColor: colors.line, marginTop: 14, paddingTop: 12, flexDirection: 'row', justifyContent: 'space-between' }, time: { color: colors.muted, fontSize: 12 }, total: { color: colors.accent, fontWeight: '800' } });
+export default function ClientOrders() {
+  return (
+    <Screen>
+      <Header title="Meus pedidos" subtitle="Acompanhe tudo que já pediu" />
+      <View style={styles.filter}>
+        <Text style={styles.filterActive}>Todos</Text>
+        <Text style={styles.filterText}>Em andamento</Text>
+        <Text style={styles.filterText}>Concluídos</Text>
+      </View>
+      {orders.map((order) => (
+        <Pressable
+          key={order.id}
+          onPress={() => router.push(`/(cliente)/pedidos/${order.id}` as never)}
+          style={ui.card}
+        >
+          <View style={styles.top}>
+            <Text style={styles.number}>Pedido #{order.id}</Text>
+            <Text style={styles.status}>{order.status}</Text>
+          </View>
+          <Text style={styles.item}>{order.item}</Text>
+          <View style={styles.bottom}>
+            <Text style={styles.time}>{order.time}</Text>
+            <Text style={styles.total}>{money(order.total)}</Text>
+          </View>
+        </Pressable>
+      ))}
+    </Screen>
+  );
+}
+const styles = StyleSheet.create({
+  filter: { flexDirection: "row", gap: 18, marginBottom: 20 },
+  filterActive: { color: colors.accent, fontWeight: "800" },
+  filterText: { color: colors.muted },
+  top: { flexDirection: "row", justifyContent: "space-between" },
+  number: { color: colors.ink, fontWeight: "800" },
+  status: { color: colors.green, fontSize: 12, fontWeight: "800" },
+  item: { color: colors.muted, marginTop: 12 },
+  bottom: {
+    borderTopWidth: 1,
+    borderTopColor: colors.line,
+    marginTop: 14,
+    paddingTop: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  time: { color: colors.muted, fontSize: 12 },
+  total: { color: colors.accent, fontWeight: "800" },
+});

@@ -1,15 +1,15 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 
 const stats = [
-  { label: 'Vendas', value: 'R$ 4.280', color: '#f5c9a6' },
-  { label: 'Pedidos', value: '128', color: '#f9d9c7' },
-  { label: 'Clientes', value: '96', color: '#f4e3d0' },
+  { label: "Vendas", value: "R$ 4.280", color: "#f5c9a6" },
+  { label: "Pedidos", value: "128", color: "#f9d9c7" },
+  { label: "Clientes", value: "96", color: "#f4e3d0" },
 ];
 
 const highlights = [
-  { title: 'Brownie de Nutella', subtitle: 'Mais vendido', badge: '18 un.' },
-  { title: 'Cupcake de morango', subtitle: 'Em alta', badge: '12 un.' },
-  { title: 'Cookie de chocolate', subtitle: 'Pedido do dia', badge: '9 un.' },
+  { title: "Brownie de Nutella", subtitle: "Mais vendido", badge: "18 un." },
+  { title: "Cupcake de morango", subtitle: "Em alta", badge: "12 un." },
+  { title: "Cookie de chocolate", subtitle: "Pedido do dia", badge: "9 un." },
 ];
 
 export default function HomeTab() {
@@ -20,7 +20,10 @@ export default function HomeTab() {
 
       <View style={styles.rowCards}>
         {stats.map((item) => (
-          <View key={item.label} style={[styles.statCard, { backgroundColor: item.color }]}>
+          <View
+            key={item.label}
+            style={[styles.statCard, { backgroundColor: item.color }]}
+          >
             <Text style={styles.statLabel}>{item.label}</Text>
             <Text style={styles.statValue}>{item.value}</Text>
           </View>
@@ -52,28 +55,28 @@ export default function HomeTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fffaf6',
+    backgroundColor: "#fffaf6",
   },
   content: {
     padding: 24,
     paddingTop: 56,
   },
   greeting: {
-    color: '#8a5641',
+    color: "#8a5641",
     fontSize: 14,
-    fontWeight: '700',
-    textTransform: 'uppercase',
+    fontWeight: "700",
+    textTransform: "uppercase",
     letterSpacing: 1,
   },
   title: {
     marginTop: 8,
     fontSize: 30,
-    fontWeight: '800',
-    color: '#2f1f1c',
+    fontWeight: "800",
+    color: "#2f1f1c",
   },
   rowCards: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 24,
     gap: 12,
   },
@@ -84,70 +87,70 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    fontWeight: '700',
-    color: '#6b4439',
-    textTransform: 'uppercase',
+    fontWeight: "700",
+    color: "#6b4439",
+    textTransform: "uppercase",
   },
   statValue: {
     marginTop: 8,
     fontSize: 22,
-    fontWeight: '800',
-    color: '#2c1c1b',
+    fontWeight: "800",
+    color: "#2c1c1b",
   },
   sectionHeader: {
     marginTop: 28,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#2c1c1b',
+    fontWeight: "700",
+    color: "#2c1c1b",
   },
   sectionLink: {
-    color: '#d96f3d',
-    fontWeight: '700',
+    color: "#d96f3d",
+    fontWeight: "700",
   },
   listCard: {
     marginTop: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 20,
     padding: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
     elevation: 3,
   },
   productItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f3e2d9',
+    borderBottomColor: "#f3e2d9",
   },
   productInfo: {
     flex: 1,
   },
   productTitle: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#2c1c1b',
+    fontWeight: "700",
+    color: "#2c1c1b",
   },
   productSubtitle: {
     marginTop: 4,
-    color: '#7e5b50',
+    color: "#7e5b50",
     fontSize: 12,
   },
   productBadge: {
-    backgroundColor: '#fde5d8',
-    color: '#a85c38',
+    backgroundColor: "#fde5d8",
+    color: "#a85c38",
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: 999,
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 12,
   },
 });

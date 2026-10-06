@@ -1,7 +1,117 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { products, money } from '../../../data/mock';
-import { colors, Header, Screen, styles as ui } from '../../../components/ui';
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { products, money } from "../../../data/mock";
+import { colors, Header, Screen, styles as ui } from "../../../components/ui";
 
-export default function ClientMenu() { return <Screen><Header title="Olá, Ana" subtitle="Escolha um doce para hoje" action={<Pressable style={styles.bag}><Text>0</Text></Pressable>} /><View style={styles.hero}><Text style={styles.heroKicker}>FEITO COM CARINHO</Text><Text style={styles.heroTitle}>Seu momento doce começa aqui.</Text><Text style={styles.heroText}>Brownies, cookies e sabores que abraçam.</Text></View><Text style={ui.sectionTitle}>Mais pedidos</Text><View style={styles.categories}><Text style={styles.categoryActive}>Todos</Text><Text style={styles.category}>Brownies</Text><Text style={styles.category}>Cookies</Text></View>{products.map((product) => <Pressable key={product.id} onPress={() => router.push(`/(cliente)/cardapio/${product.id}` as never)} style={ui.card}><View style={[styles.productImage, { backgroundColor: product.color }]}><Text style={styles.productMark}>DB</Text></View><View style={styles.productInfo}><Text style={styles.productName}>{product.name}</Text><Text style={styles.productDescription} numberOfLines={1}>{product.description}</Text><Text style={styles.price}>{money(product.price)}</Text></View><Text style={styles.plus}>+</Text></Pressable>)}</Screen>; }
-const styles = StyleSheet.create({ hero: { backgroundColor: '#593a30', borderRadius: 20, padding: 20, marginBottom: 26 }, heroKicker: { color: '#f3cda9', fontSize: 10, fontWeight: '800', letterSpacing: 1.3 }, heroTitle: { color: '#fff8f1', fontSize: 23, fontWeight: '800', marginTop: 10, maxWidth: 240 }, heroText: { color: '#e5cabe', marginTop: 7 }, categories: { flexDirection: 'row', gap: 20, marginVertical: 16 }, categoryActive: { color: colors.accent, fontWeight: '800', borderBottomWidth: 2, borderBottomColor: colors.accent, paddingBottom: 7 }, category: { color: colors.muted, paddingBottom: 7 }, productImage: { width: 78, height: 78, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }, productMark: { color: '#fff2e8', fontWeight: '900', letterSpacing: 1 }, productInfo: { flex: 1, paddingLeft: 14 }, productName: { color: colors.ink, fontWeight: '800', fontSize: 16 }, productDescription: { color: colors.muted, fontSize: 12, marginTop: 5 }, price: { color: colors.accent, fontWeight: '800', marginTop: 8 }, plus: { backgroundColor: colors.pale, color: colors.accent, fontSize: 22, fontWeight: '700', width: 30, height: 30, textAlign: 'center', borderRadius: 15 }, bag: { backgroundColor: colors.pale, width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' } });
+export default function ClientMenu() {
+  return (
+    <Screen>
+      <Header
+        title="Olá, Ana"
+        subtitle="Escolha um doce para hoje"
+        action={
+          <Pressable style={styles.bag}>
+            <Text>0</Text>
+          </Pressable>
+        }
+      />
+      <View style={styles.hero}>
+        <Text style={styles.heroKicker}>FEITO COM CARINHO</Text>
+        <Text style={styles.heroTitle}>Seu momento doce começa aqui.</Text>
+        <Text style={styles.heroText}>
+          Brownies, cookies e sabores que abraçam.
+        </Text>
+      </View>
+      <Text style={ui.sectionTitle}>Mais pedidos</Text>
+      <View style={styles.categories}>
+        <Text style={styles.categoryActive}>Todos</Text>
+        <Text style={styles.category}>Brownies</Text>
+        <Text style={styles.category}>Cookies</Text>
+      </View>
+      {products.map((product) => (
+        <Pressable
+          key={product.id}
+          onPress={() =>
+            router.push(`/(cliente)/cardapio/${product.id}` as never)
+          }
+          style={ui.card}
+        >
+          <View
+            style={[styles.productImage, { backgroundColor: product.color }]}
+          >
+            <Text style={styles.productMark}>DB</Text>
+          </View>
+          <View style={styles.productInfo}>
+            <Text style={styles.productName}>{product.name}</Text>
+            <Text style={styles.productDescription} numberOfLines={1}>
+              {product.description}
+            </Text>
+            <Text style={styles.price}>{money(product.price)}</Text>
+          </View>
+          <Text style={styles.plus}>+</Text>
+        </Pressable>
+      ))}
+    </Screen>
+  );
+}
+const styles = StyleSheet.create({
+  hero: {
+    backgroundColor: "#593a30",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 26,
+  },
+  heroKicker: {
+    color: "#f3cda9",
+    fontSize: 10,
+    fontWeight: "800",
+    letterSpacing: 1.3,
+  },
+  heroTitle: {
+    color: "#fff8f1",
+    fontSize: 23,
+    fontWeight: "800",
+    marginTop: 10,
+    maxWidth: 240,
+  },
+  heroText: { color: "#e5cabe", marginTop: 7 },
+  categories: { flexDirection: "row", gap: 20, marginVertical: 16 },
+  categoryActive: {
+    color: colors.accent,
+    fontWeight: "800",
+    borderBottomWidth: 2,
+    borderBottomColor: colors.accent,
+    paddingBottom: 7,
+  },
+  category: { color: colors.muted, paddingBottom: 7 },
+  productImage: {
+    width: 78,
+    height: 78,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  productMark: { color: "#fff2e8", fontWeight: "900", letterSpacing: 1 },
+  productInfo: { flex: 1, paddingLeft: 14 },
+  productName: { color: colors.ink, fontWeight: "800", fontSize: 16 },
+  productDescription: { color: colors.muted, fontSize: 12, marginTop: 5 },
+  price: { color: colors.accent, fontWeight: "800", marginTop: 8 },
+  plus: {
+    backgroundColor: colors.pale,
+    color: colors.accent,
+    fontSize: 22,
+    fontWeight: "700",
+    width: 30,
+    height: 30,
+    textAlign: "center",
+    borderRadius: 15,
+  },
+  bag: {
+    backgroundColor: colors.pale,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
