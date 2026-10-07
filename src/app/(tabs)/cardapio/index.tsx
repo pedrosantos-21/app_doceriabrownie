@@ -1,28 +1,54 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
-import { router } from 'expo-router';
-import { products, money } from '../../../data/mock';
-import { Button, colors } from '../../../components/ui';
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { money, products, type Product } from "../../../data/mock";
+import { Button, colors } from "../../../components/ui";
 
 export default function CardapioTab() {
-  return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.title}>Cardápio</Text>
-      <View style={styles.titleRow}><Text style={styles.subtitle}>Seleção especial da semana</Text><Button label="Novo item" icon="plus" onPress={() => router.push('/(tabs)/cardapio/novo' as never)} /></View>
+  const renderProduct = ({ item }: { item: Product }) => (
+    <Pressable
+      onPress={() =>
+        router.push(`/(tabs)/cardapio/novo?id=${item.id}` as never)
+      }
+      style={styles.card}
+    >
+      <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}>
+        <Text style={styles.imageText}>DB</Text>
+      </View>
 
-      {products.map((item) => (
-        <Pressable key={item.id} onPress={() => router.push(`/(tabs)/cardapio/novo?id=${item.id}` as never)} style={styles.card}>
-          <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}><Text style={styles.imageText}>DB</Text></View>
-          <View style={styles.cardContent}>
-            <Text style={styles.nome}>{item.name}</Text>
-            <Text style={styles.meta}>Tempo de preparo: {item.prepTime}</Text>
-            <View style={styles.footer}>
-              <Text style={styles.preco}>{money(item.price)}</Text>
-              <Text style={styles.pill}>Disponível</Text>
-            </View>
+      <View style={styles.cardContent}>
+        <Text style={styles.nome}>{item.name}</Text>
+        <Text style={styles.meta}>Tempo de preparo: {item.prepTime}</Text>
+
+        <View style={styles.footer}>
+          <Text style={styles.preco}>{money(item.price)}</Text>
+          <Text style={styles.pill}>Disponível</Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+
+  return (
+    <FlatList
+      data={products}
+      keyExtractor={(item) => item.id}
+      renderItem={renderProduct}
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+      ListHeaderComponent={
+        <>
+          <Text style={styles.title}>Cardápio</Text>
+          <View style={styles.titleRow}>
+            <Text style={styles.subtitle}>Seleção especial da semana</Text>
+            <Button
+              label="Novo item"
+              icon="plus"
+              onPress={() => router.push("/(tabs)/cardapio/novo" as never)}
+            />
           </View>
-        </Pressable>
-      ))}
-    </ScrollView>
+        </>
+      }
+    />
   );
 }
 
@@ -37,7 +63,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: '800',
+    fontWeight: "800",
     color: colors.ink,
   },
   subtitle: {
@@ -47,18 +73,18 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 18,
   },
   card: {
-    flexDirection: 'row',
+    flexDirection: "row",
     backgroundColor: colors.white,
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: 16,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.06,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
@@ -67,12 +93,12 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: 100,
     backgroundColor: colors.pale,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   imageText: {
     color: colors.accent,
-    fontWeight: '900',
+    fontWeight: "900",
     letterSpacing: 1,
   },
   cardContent: {
@@ -81,7 +107,7 @@ const styles = StyleSheet.create({
   },
   nome: {
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: "700",
     color: colors.ink,
   },
   meta: {
@@ -91,21 +117,21 @@ const styles = StyleSheet.create({
   },
   footer: {
     marginTop: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   preco: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: "800",
     color: colors.accent,
   },
   pill: {
-    backgroundColor: '#e6efe8',
+    backgroundColor: "#e6efe8",
     color: colors.green,
     borderRadius: 999,
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: "700",
     paddingHorizontal: 10,
     paddingVertical: 6,
   },
