@@ -1,7 +1,14 @@
+<<<<<<< Updated upstream
 import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import { router } from "expo-router";
 import { products, money } from "../../../data/mock";
 import { Button } from "../../../components/ui";
+=======
+import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { products, money } from '../../../data/mock';
+import { Button, colors } from '../../../components/ui';
+>>>>>>> Stashed changes
 
 export default function CardapioTab() {
   return (
@@ -46,7 +53,11 @@ export default function CardapioTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+<<<<<<< Updated upstream
     backgroundColor: "#fffaf6",
+=======
+    backgroundColor: colors.bg,
+>>>>>>> Stashed changes
   },
   content: {
     padding: 24,
@@ -54,12 +65,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
+<<<<<<< Updated upstream
     fontWeight: "800",
     color: "#2a1b1a",
   },
   subtitle: {
     marginTop: 8,
     color: "#785c53",
+=======
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  subtitle: {
+    marginTop: 8,
+    color: colors.muted,
+>>>>>>> Stashed changes
     fontSize: 14,
     marginBottom: 18,
   },
@@ -70,8 +90,13 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   card: {
+<<<<<<< Updated upstream
     flexDirection: "row",
     backgroundColor: "#fff",
+=======
+    flexDirection: 'row',
+    backgroundColor: colors.white,
+>>>>>>> Stashed changes
     borderRadius: 20,
     overflow: "hidden",
     marginBottom: 16,
@@ -83,6 +108,7 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     width: 100,
+<<<<<<< Updated upstream
     backgroundColor: "#f6d7c2",
     alignItems: "center",
     justifyContent: "center",
@@ -90,6 +116,15 @@ const styles = StyleSheet.create({
   imageText: {
     color: "#fff2e8",
     fontWeight: "900",
+=======
+    backgroundColor: colors.pale,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imageText: {
+    color: colors.accent,
+    fontWeight: '900',
+>>>>>>> Stashed changes
     letterSpacing: 1,
   },
   cardContent: {
@@ -98,12 +133,21 @@ const styles = StyleSheet.create({
   },
   nome: {
     fontSize: 18,
+<<<<<<< Updated upstream
     fontWeight: "700",
     color: "#2a1b1a",
   },
   meta: {
     marginTop: 8,
     color: "#7d5c51",
+=======
+    fontWeight: '700',
+    color: colors.ink,
+  },
+  meta: {
+    marginTop: 8,
+    color: colors.muted,
+>>>>>>> Stashed changes
     fontSize: 12,
   },
   footer: {
@@ -114,12 +158,21 @@ const styles = StyleSheet.create({
   },
   preco: {
     fontSize: 18,
+<<<<<<< Updated upstream
     fontWeight: "800",
     color: "#d96f3d",
   },
   pill: {
     backgroundColor: "#f3ebd6",
     color: "#7a6224",
+=======
+    fontWeight: '800',
+    color: colors.accent,
+  },
+  pill: {
+    backgroundColor: '#e6efe8',
+    color: colors.green,
+>>>>>>> Stashed changes
     borderRadius: 999,
     fontSize: 12,
     fontWeight: "700",

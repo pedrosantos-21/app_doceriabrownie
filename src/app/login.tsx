@@ -171,12 +171,21 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+<<<<<<< Updated upstream
     backgroundColor: "#fff5ef",
     justifyContent: "center",
     padding: 24,
   },
   card: {
     backgroundColor: "#ffffff",
+=======
+    backgroundColor: colors.bg,
+    justifyContent: 'center',
+    padding: 24,
+  },
+  card: {
+    backgroundColor: colors.white,
+>>>>>>> Stashed changes
     borderRadius: 28,
     padding: 24,
     shadowColor: "#000",
@@ -186,17 +195,28 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   eyebrow: {
+<<<<<<< Updated upstream
     color: "#d96f3d",
     fontWeight: "700",
     textTransform: "uppercase",
+=======
+    color: colors.accent,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+>>>>>>> Stashed changes
     letterSpacing: 1,
     fontSize: 12,
   },
   title: {
     marginTop: 8,
     fontSize: 30,
+<<<<<<< Updated upstream
     fontWeight: "800",
     color: "#2c1c1a",
+=======
+    fontWeight: '800',
+    color: colors.ink,
+>>>>>>> Stashed changes
   },
   form: {
     marginTop: 28,
@@ -229,6 +249,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
+<<<<<<< Updated upstream
     fontWeight: "600",
     color: "#4a312d",
     marginBottom: 8,
@@ -242,6 +263,21 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: "#2d1d1b",
+=======
+    fontWeight: '600',
+    color: colors.ink,
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: colors.bg,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.line,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 16,
+    color: colors.ink,
+>>>>>>> Stashed changes
   },
   inputError: {
     borderColor: "#d65d4a",
@@ -260,6 +296,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 12,
+<<<<<<< Updated upstream
     backgroundColor: "#f4e4dc",
   },
   visibilityText: {
@@ -269,18 +306,37 @@ const styles = StyleSheet.create({
   primaryButton: {
     marginTop: 12,
     backgroundColor: "#d96f3d",
+=======
+    backgroundColor: colors.pale,
+  },
+  visibilityText: {
+    color: colors.accent,
+    fontWeight: '600',
+  },
+  primaryButton: {
+    marginTop: 12,
+    backgroundColor: colors.accent,
+>>>>>>> Stashed changes
     borderRadius: 16,
     paddingVertical: 16,
     alignItems: "center",
   },
   primaryButtonText: {
+<<<<<<< Updated upstream
     color: "#fff",
+=======
+    color: colors.white,
+>>>>>>> Stashed changes
     fontSize: 16,
     fontWeight: "700",
   },
   helperText: {
     marginTop: 16,
+<<<<<<< Updated upstream
     color: "#7d5e57",
+=======
+    color: colors.muted,
+>>>>>>> Stashed changes
     fontSize: 12,
     textAlign: "center",
   },
