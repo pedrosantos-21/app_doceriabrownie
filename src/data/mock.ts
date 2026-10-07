@@ -17,11 +17,7 @@ export const products: Product[] = [
     price: 22,
     category: "Brownies",
     prepTime: "15 min",
-<<<<<<< Updated upstream
-    color: "#704332",
-=======
     color: "#7f263f",
->>>>>>> Stashed changes
   },
   {
     id: "morango",
@@ -30,11 +26,7 @@ export const products: Product[] = [
     price: 18,
     category: "Doces",
     prepTime: "10 min",
-<<<<<<< Updated upstream
-    color: "#c9575b",
-=======
     color: "#bd687d",
->>>>>>> Stashed changes
   },
   {
     id: "cookie",
@@ -43,11 +35,7 @@ export const products: Product[] = [
     price: 20,
     category: "Cookies",
     prepTime: "12 min",
-<<<<<<< Updated upstream
-    color: "#a66b43",
-=======
     color: "#90604d",
->>>>>>> Stashed changes
   },
   {
     id: "cupcake",
@@ -56,11 +44,7 @@ export const products: Product[] = [
     price: 16,
     category: "Bolos",
     prepTime: "8 min",
-<<<<<<< Updated upstream
-    color: "#d29a67",
-=======
     color: "#d18c9b",
->>>>>>> Stashed changes
   },
 ];
 

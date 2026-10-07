@@ -1,41 +1,17 @@
-<<<<<<< Updated upstream
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
-import { router } from "expo-router";
-import { products, money } from "../../../data/mock";
-import { Button } from "../../../components/ui";
-=======
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { products, money } from '../../../data/mock';
 import { Button, colors } from '../../../components/ui';
->>>>>>> Stashed changes
 
 export default function CardapioTab() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Cardápio</Text>
-      <View style={styles.titleRow}>
-        <Text style={styles.subtitle}>Seleção especial da semana</Text>
-        <Button
-          label="Novo item"
-          icon="plus"
-          onPress={() => router.push("/(tabs)/cardapio/novo" as never)}
-        />
-      </View>
+      <View style={styles.titleRow}><Text style={styles.subtitle}>Seleção especial da semana</Text><Button label="Novo item" icon="plus" onPress={() => router.push('/(tabs)/cardapio/novo' as never)} /></View>
 
       {products.map((item) => (
-        <Pressable
-          key={item.id}
-          onPress={() =>
-            router.push(`/(tabs)/cardapio/novo?id=${item.id}` as never)
-          }
-          style={styles.card}
-        >
-          <View
-            style={[styles.imagePlaceholder, { backgroundColor: item.color }]}
-          >
-            <Text style={styles.imageText}>DB</Text>
-          </View>
+        <Pressable key={item.id} onPress={() => router.push(`/(tabs)/cardapio/novo?id=${item.id}` as never)} style={styles.card}>
+          <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}><Text style={styles.imageText}>DB</Text></View>
           <View style={styles.cardContent}>
             <Text style={styles.nome}>{item.name}</Text>
             <Text style={styles.meta}>Tempo de preparo: {item.prepTime}</Text>
@@ -53,11 +29,7 @@ export default function CardapioTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-<<<<<<< Updated upstream
-    backgroundColor: "#fffaf6",
-=======
     backgroundColor: colors.bg,
->>>>>>> Stashed changes
   },
   content: {
     padding: 24,
@@ -65,42 +37,28 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-<<<<<<< Updated upstream
-    fontWeight: "800",
-    color: "#2a1b1a",
-  },
-  subtitle: {
-    marginTop: 8,
-    color: "#785c53",
-=======
     fontWeight: '800',
     color: colors.ink,
   },
   subtitle: {
     marginTop: 8,
     color: colors.muted,
->>>>>>> Stashed changes
     fontSize: 14,
     marginBottom: 18,
   },
   titleRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 18,
   },
   card: {
-<<<<<<< Updated upstream
-    flexDirection: "row",
-    backgroundColor: "#fff",
-=======
     flexDirection: 'row',
     backgroundColor: colors.white,
->>>>>>> Stashed changes
     borderRadius: 20,
-    overflow: "hidden",
+    overflow: 'hidden',
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
@@ -108,15 +66,6 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     width: 100,
-<<<<<<< Updated upstream
-    backgroundColor: "#f6d7c2",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imageText: {
-    color: "#fff2e8",
-    fontWeight: "900",
-=======
     backgroundColor: colors.pale,
     alignItems: 'center',
     justifyContent: 'center',
@@ -124,7 +73,6 @@ const styles = StyleSheet.create({
   imageText: {
     color: colors.accent,
     fontWeight: '900',
->>>>>>> Stashed changes
     letterSpacing: 1,
   },
   cardContent: {
@@ -133,49 +81,31 @@ const styles = StyleSheet.create({
   },
   nome: {
     fontSize: 18,
-<<<<<<< Updated upstream
-    fontWeight: "700",
-    color: "#2a1b1a",
-  },
-  meta: {
-    marginTop: 8,
-    color: "#7d5c51",
-=======
     fontWeight: '700',
     color: colors.ink,
   },
   meta: {
     marginTop: 8,
     color: colors.muted,
->>>>>>> Stashed changes
     fontSize: 12,
   },
   footer: {
     marginTop: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   preco: {
     fontSize: 18,
-<<<<<<< Updated upstream
-    fontWeight: "800",
-    color: "#d96f3d",
-  },
-  pill: {
-    backgroundColor: "#f3ebd6",
-    color: "#7a6224",
-=======
     fontWeight: '800',
     color: colors.accent,
   },
   pill: {
     backgroundColor: '#e6efe8',
     color: colors.green,
->>>>>>> Stashed changes
     borderRadius: 999,
     fontSize: 12,
-    fontWeight: "700",
+    fontWeight: '700',
     paddingHorizontal: 10,
     paddingVertical: 6,
   },

@@ -11,16 +11,6 @@ import {
 } from "react-native";
 
 export const colors = {
-<<<<<<< Updated upstream
-  bg: "#fbf7f2",
-  ink: "#2c211e",
-  muted: "#806e66",
-  accent: "#c85d36",
-  pale: "#f5e6da",
-  line: "#eadbd1",
-  green: "#4c8a67",
-  white: "#fff",
-=======
   bg: "#fff8f6",
   ink: "#3f1b29",
   muted: "#866773",
@@ -29,7 +19,6 @@ export const colors = {
   line: "#e9d2d9",
   green: "#66836e",
   white: "#fffdfd",
->>>>>>> Stashed changes
 };
 
 export function Screen({
@@ -201,11 +190,7 @@ export const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 17,
     borderWidth: 1,
-<<<<<<< Updated upstream
-    borderColor: "#f0e5de",
-=======
     borderColor: colors.line,
->>>>>>> Stashed changes
     marginBottom: 12,
   },
   button: {
