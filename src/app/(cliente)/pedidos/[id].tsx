@@ -1,11 +1,32 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { orders, money } from "../../../data/mock";
-import { colors, Header, Screen, styles as ui } from "../../../components/ui";
+import { money } from "../../../data/mock";
+import {
+  Button,
+  colors,
+  Header,
+  Screen,
+  styles as ui,
+} from "../../../components/ui";
+import { useOrders } from "../../../context/OrdersContext";
 
 export default function ClientOrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const order = orders.find((item) => item.id === id) || orders[0];
+  const { orders } = useOrders();
+  const order = orders.find((item) => item.id === id);
+
+  if (!order) {
+    return (
+      <Screen>
+        <Header title="Pedido não encontrado" back />
+        <Text style={styles.message}>
+          Este pedido não está mais disponível.
+        </Text>
+        <Button label="Voltar aos pedidos" onPress={() => router.back()} />
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
       <Header title="Acompanhar pedido" back />
@@ -19,6 +40,9 @@ export default function ClientOrderDetail() {
       <View style={ui.card}>
         <Text style={styles.label}>Resumo do pedido</Text>
         <Text style={styles.item}>{order.item}</Text>
+        {order.notes ? (
+          <Text style={styles.address}>Observações: {order.notes}</Text>
+        ) : null}
         <View style={styles.line}>
           <Text>Total</Text>
           <Text style={styles.total}>{money(order.total)}</Text>

@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import type { TextInputProps } from "react-native";
 
 export const colors = {
   bg: "#fff8f6",
@@ -113,17 +114,24 @@ export function Field({
   value,
   placeholder,
   multiline = false,
+  onChangeText,
+  keyboardType,
 }: {
   label: string;
   value?: string;
   placeholder?: string;
   multiline?: boolean;
+  onChangeText?: (value: string) => void;
+  keyboardType?: TextInputProps["keyboardType"];
 }) {
   return (
     <View style={styles.field}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
-        defaultValue={value}
+        value={onChangeText ? value : undefined}
+        defaultValue={onChangeText ? undefined : value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
         placeholder={placeholder}
         placeholderTextColor="#aa9a91"
         multiline={multiline}

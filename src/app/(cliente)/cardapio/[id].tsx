@@ -23,7 +23,11 @@ export default function ProductDetail() {
       </View>
       <Button
         label="Solicitar este item"
-        onPress={() => router.push("/(cliente)/pedidos/solicitar" as never)}
+        onPress={() =>
+          router.push(
+            `/(cliente)/pedidos/solicitar?productId=${product.id}` as never,
+          )
+        }
       />
     </Screen>
   );

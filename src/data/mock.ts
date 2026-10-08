@@ -8,6 +8,17 @@ export type Product = {
   color: string;
 };
 
+export type Order = {
+  id: string;
+  customer: string;
+  item: string;
+  status: string;
+  total: number;
+  time: string;
+  color: string;
+  notes?: string;
+};
+
 export const products: Product[] = [
   {
     id: "brownie",
@@ -48,7 +59,7 @@ export const products: Product[] = [
   },
 ];
 
-export const orders = [
+export const orders: Order[] = [
   {
     id: "1048",
     customer: "Maria Oliveira",
@@ -71,7 +82,7 @@ export const orders = [
     id: "1046",
     customer: "Laura Mendes",
     item: "1 Cookie de chocolate",
-    status: "A caminho",
+    status: "Enviado para entrega...",
     total: 29,
     time: "Ontem, 18:12",
     color: "#8baed0",

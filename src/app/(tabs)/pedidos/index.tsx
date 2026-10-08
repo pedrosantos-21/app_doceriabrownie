@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
 import { router } from 'expo-router';
-import { orders, money } from '../../../data/mock';
+import { money } from '../../../data/mock';
 import { colors } from '../../../components/ui';
+import { useOrders } from '../../../context/OrdersContext';
 
 export default function PedidosTab() {
+  const { orders } = useOrders();
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Pedidos</Text>
@@ -14,6 +17,7 @@ export default function PedidosTab() {
           <View>
             <Text style={styles.cliente}>{pedido.customer}</Text>
             <Text style={styles.item}>{pedido.item}</Text>
+            {pedido.notes ? <Text style={styles.notes}>Obs.: {pedido.notes}</Text> : null}
           </View>
 
           <View style={styles.rightSide}>
@@ -68,6 +72,11 @@ const styles = StyleSheet.create({
   item: {
     marginTop: 6,
     fontSize: 13,
+    color: colors.muted,
+  },
+  notes: {
+    marginTop: 4,
+    fontSize: 12,
     color: colors.muted,
   },
   rightSide: {

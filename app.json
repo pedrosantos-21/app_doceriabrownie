@@ -32,7 +32,15 @@
     },
     "plugins": [
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Permita que a Doceria Brownie use sua câmera para atualizar a foto de perfil.",
+          "photosPermission": "Permita que a Doceria Brownie acesse suas fotos para atualizar a foto de perfil.",
+          "microphonePermission": false
+        }
+      ]
     ]
   }
 }
