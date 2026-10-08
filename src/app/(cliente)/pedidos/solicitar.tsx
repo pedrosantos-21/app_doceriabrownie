@@ -2,11 +2,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { Button, colors, Field, Header, Screen } from "../../../components/ui";
-import { products } from "../../../data/mock";
+import { useCatalog } from "../../../context/CatalogContext";
 import { useOrders } from "../../../context/OrdersContext";
 
 export default function RequestItem() {
   const { productId } = useLocalSearchParams<{ productId?: string }>();
+  const { products } = useCatalog();
   const product = products.find((item) => item.id === productId);
   const { createOrder, isOrdersLoaded } = useOrders();
   const [item, setItem] = useState(product?.name ?? "");

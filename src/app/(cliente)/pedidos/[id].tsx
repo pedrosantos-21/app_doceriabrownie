@@ -34,7 +34,13 @@ export default function ClientOrderDetail() {
         <Text style={styles.kicker}>PEDIDO #{order.id}</Text>
         <Text style={styles.status}>{order.status}</Text>
         <Text style={styles.message}>
-          Seu pedido está sendo preparado com carinho.
+          {order.status === "Em preparo"
+            ? "Seu pedido está sendo preparado com carinho."
+            : order.status === "Pronto"
+              ? "Seu pedido está pronto e aguardando envio."
+              : order.status === "Enviado para entrega"
+                ? "Seu pedido saiu para entrega."
+                : "Seu pedido foi entregue. Aproveite!"}
         </Text>
       </View>
       <View style={ui.card}>

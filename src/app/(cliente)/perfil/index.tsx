@@ -4,7 +4,7 @@ import { Button, colors, Header, Screen, styles as ui } from '../../../component
 import { useProfile } from '../../../context/ProfileContext';
 
 export default function ClientProfile() {
-  const { avatarUri } = useProfile();
+  const { avatarUri, clientProfile } = useProfile();
 
   return (
     <Screen>
@@ -18,15 +18,15 @@ export default function ClientProfile() {
             <Text style={styles.avatarText}>A</Text>
           )}
         </View>
-        <Text style={styles.name}>Ana Carolina</Text>
-        <Text style={styles.email}>ana@email.com</Text>
+        <Text style={styles.name}>{clientProfile.name}</Text>
+        <Text style={styles.email}>{clientProfile.email}</Text>
       </View>
 
       <View style={ui.card}>
         <Text style={styles.section}>Dados pessoais</Text>
-        <Text style={styles.info}>Nome completo{`\n`}Ana Carolina</Text>
-        <Text style={styles.info}>Telefone{`\n`}(11) 99999-0000</Text>
-        <Text style={styles.info}>Endereço{`\n`}Rua das Flores, 120</Text>
+        <Text style={styles.info}>Nome completo{`\n`}{clientProfile.name}</Text>
+        <Text style={styles.info}>Telefone{`\n`}{clientProfile.phone}</Text>
+        <Text style={styles.info}>Endereço{`\n`}{clientProfile.address}</Text>
         <Button
           label="Editar dados"
           secondary

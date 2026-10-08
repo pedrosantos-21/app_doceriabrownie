@@ -1,16 +1,43 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { products, money } from "../../../data/mock";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { money } from "../../../data/mock";
 import { Button, colors, Header, Screen } from "../../../components/ui";
+import { useCatalog } from "../../../context/CatalogContext";
 
 export default function ProductDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const product = products.find((item) => item.id === id) || products[0];
+  const { products, isCatalogLoaded } = useCatalog();
+  const product = products.find((item) => item.id === id);
+
+  if (!isCatalogLoaded) {
+    return (
+      <Screen>
+        <Header title="Cardápio" subtitle="Carregando item" back />
+        <ActivityIndicator color={colors.accent} />
+      </Screen>
+    );
+  }
+
+  if (!product) {
+    return (
+      <Screen>
+        <Header title="Item não encontrado" back />
+        <Text style={styles.description}>
+          Este produto não está mais disponível no cardápio.
+        </Text>
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
       <Header title="Detalhe do item" back />
       <View style={[styles.cover, { backgroundColor: product.color }]}>
-        <Text style={styles.mark}>DOCERIA{`\n`}BROWNIE</Text>
+        {product.photoUri ? (
+          <Image source={{ uri: product.photoUri }} style={styles.coverImage} />
+        ) : (
+          <Text style={styles.mark}>DOCERIA{`\n`}BROWNIE</Text>
+        )}
       </View>
       <Text style={styles.category}>
         {product.category} · {product.prepTime}
@@ -39,6 +66,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 22,
+  },
+  coverImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 24,
   },
   mark: {
     color: colors.white,

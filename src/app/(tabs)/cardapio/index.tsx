@@ -1,9 +1,13 @@
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image } from "react-native";
 import { router } from "expo-router";
-import { money, products, type Product } from "../../../data/mock";
+import { money, type Product } from "../../../data/mock";
 import { Button, colors } from "../../../components/ui";
+import { useCatalog } from "../../../context/CatalogContext";
 
 export default function CardapioTab() {
+  const { products } = useCatalog();
+
   const renderProduct = ({ item }: { item: Product }) => (
     <Pressable
       onPress={() =>
@@ -11,9 +15,13 @@ export default function CardapioTab() {
       }
       style={styles.card}
     >
-      <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}>
-        <Text style={styles.imageText}>DB</Text>
-      </View>
+      {item.photoUri ? (
+        <Image source={{ uri: item.photoUri }} style={styles.productImage} />
+      ) : (
+        <View style={[styles.imagePlaceholder, { backgroundColor: item.color }]}>
+          <Text style={styles.imageText}>DB</Text>
+        </View>
+      )}
 
       <View style={styles.cardContent}>
         <Text style={styles.nome}>{item.name}</Text>
@@ -92,9 +100,14 @@ const styles = StyleSheet.create({
   },
   imagePlaceholder: {
     width: 100,
+    height: 110,
     backgroundColor: colors.pale,
     alignItems: "center",
     justifyContent: "center",
+  },
+  productImage: {
+    width: 100,
+    height: 110,
   },
   imageText: {
     color: colors.accent,

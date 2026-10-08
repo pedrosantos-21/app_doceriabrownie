@@ -1,12 +1,17 @@
 import { router } from 'expo-router';
-import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useMemo, useState } from 'react';
-import { money, products, type Product } from '../../../data/mock';
+import { money, type Product } from '../../../data/mock';
 import { colors, Header, styles as ui } from '../../../components/ui';
+import { useCatalog } from '../../../context/CatalogContext';
 
 export default function ClientMenu() {
+  const { products } = useCatalog();
   const [selectedCategory, setSelectedCategory] = useState('Todos');
-  const categories = ['Todos', 'Brownies', 'Cookies', 'Doces', 'Bolos'];
+  const categories = [
+    'Todos',
+    ...Array.from(new Set(products.map((product) => product.category))),
+  ];
   const visibleProducts = useMemo(
     () =>
       selectedCategory === 'Todos'
@@ -20,9 +25,13 @@ export default function ClientMenu() {
       onPress={() => router.push(`/(cliente)/cardapio/${item.id}` as never)}
       style={ui.card}
     >
-      <View style={[styles.productImage, { backgroundColor: item.color }]}>
-        <Text style={styles.productMark}>DB</Text>
-      </View>
+      {item.photoUri ? (
+        <Image source={{ uri: item.photoUri }} style={styles.productImage} />
+      ) : (
+        <View style={[styles.productImage, { backgroundColor: item.color }]}>
+          <Text style={styles.productMark}>DB</Text>
+        </View>
+      )}
 
       <View style={styles.productInfo}>
         <Text style={styles.productName}>{item.name}</Text>

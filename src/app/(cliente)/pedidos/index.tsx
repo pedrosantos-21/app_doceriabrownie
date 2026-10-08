@@ -10,9 +10,13 @@ export default function ClientOrders() {
   const [filter, setFilter] = useState("Todos");
   const filters = ["Todos", "Em andamento", "Concluídos"];
   const visibleOrders = orders.filter((order) => {
-    if (filter === "Em andamento") return order.status === "Em preparo";
+    if (filter === "Em andamento") {
+      return ["Em preparo", "Pronto", "Enviado para entrega"].includes(
+        order.status,
+      );
+    }
     if (filter === "Concluídos") {
-      return ["Pronto", "A caminho", "Entregue"].includes(order.status);
+      return order.status === "Entregue";
     }
     return true;
   });

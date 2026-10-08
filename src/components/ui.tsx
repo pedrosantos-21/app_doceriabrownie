@@ -78,19 +78,23 @@ export function Button({
   onPress,
   secondary = false,
   icon,
+  disabled = false,
 }: {
   label: string;
   onPress: () => void;
   secondary?: boolean;
   icon?: keyof typeof MaterialCommunityIcons.glyphMap;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={({ pressed }) => [
         styles.button,
         secondary && styles.buttonSecondary,
         pressed && styles.pressed,
+        disabled && styles.buttonDisabled,
       ]}
     >
       {icon ? (
@@ -212,6 +216,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonSecondary: { backgroundColor: colors.pale },
+  buttonDisabled: { opacity: 0.55 },
   buttonText: { color: colors.white, fontWeight: "800", fontSize: 15 },
   buttonTextSecondary: { color: colors.accent },
   pressed: { opacity: 0.75 },

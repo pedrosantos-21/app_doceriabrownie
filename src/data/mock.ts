@@ -6,13 +6,20 @@ export type Product = {
   category: string;
   prepTime: string;
   color: string;
+  photoUri?: string;
 };
+
+export type OrderStatus =
+  | "Em preparo"
+  | "Pronto"
+  | "Enviado para entrega"
+  | "Entregue";
 
 export type Order = {
   id: string;
   customer: string;
   item: string;
-  status: string;
+  status: OrderStatus;
   total: number;
   time: string;
   color: string;
@@ -82,7 +89,7 @@ export const orders: Order[] = [
     id: "1046",
     customer: "Laura Mendes",
     item: "1 Cookie de chocolate",
-    status: "Enviado para entrega...",
+    status: "Enviado para entrega",
     total: 29,
     time: "Ontem, 18:12",
     color: "#8baed0",

@@ -6,8 +6,20 @@ import { Button, colors, Field, Header, Screen } from '../../../components/ui';
 import { useProfile } from '../../../context/ProfileContext';
 
 export default function EditClientProfile() {
-  const { avatarUri, isAvatarLoaded, updateAvatar } = useProfile();
+  const {
+    clientProfile,
+    isClientProfileLoaded,
+    updateClientProfile,
+    avatarUri,
+    isAvatarLoaded,
+    updateAvatar,
+  } = useProfile();
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(avatarUri);
+  const [name, setName] = useState(clientProfile.name);
+  const [email, setEmail] = useState(clientProfile.email);
+  const [phone, setPhone] = useState(clientProfile.phone);
+  const [address, setAddress] = useState(clientProfile.address);
+  const [isSaving, setIsSaving] = useState(false);
 
   const choosePhoto = async (source: 'camera' | 'library') => {
     try {
@@ -54,20 +66,42 @@ export default function EditClientProfile() {
     if (isAvatarLoaded) setSelectedPhoto(avatarUri);
   }, [avatarUri, isAvatarLoaded]);
 
+  useEffect(() => {
+    if (isClientProfileLoaded) {
+      setName(clientProfile.name);
+      setEmail(clientProfile.email);
+      setPhone(clientProfile.phone);
+      setAddress(clientProfile.address);
+    }
+  }, [clientProfile, isClientProfileLoaded]);
+
   const saveProfile = async () => {
+    if (!name.trim() || !email.trim() || !phone.trim() || !address.trim()) {
+      Alert.alert('Dados obrigatórios', 'Preencha todos os campos do perfil.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      Alert.alert('E-mail inválido', 'Informe um endereço de e-mail válido.');
+      return;
+    }
+
+    setIsSaving(true);
     try {
+      await updateClientProfile({ name, email, phone, address });
       await updateAvatar(selectedPhoto);
-      Alert.alert('Perfil atualizado', 'Sua foto de perfil foi atualizada.');
+      Alert.alert('Perfil atualizado', 'Os dados e a foto do perfil foram salvos neste dispositivo.');
       router.back();
     } catch (error) {
       Alert.alert(
-        'Não foi possível salvar a foto',
+        'Não foi possível salvar o perfil',
         error instanceof Error ? error.message : 'Tente novamente.',
       );
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  if (!isAvatarLoaded) {
+  if (!isAvatarLoaded || !isClientProfileLoaded) {
     return (
       <Screen>
         <Header title="Editar perfil" subtitle="Carregando seus dados" back />
@@ -96,25 +130,29 @@ export default function EditClientProfile() {
         <Text style={styles.photoHint}>Tire uma foto ou escolha uma da galeria.</Text>
       </View>
 
-      <Button label="Tirar foto" icon="camera" onPress={() => choosePhoto('camera')} />
+      <Button label="Tirar foto" icon="camera" disabled={isSaving} onPress={() => choosePhoto('camera')} />
       <View style={styles.libraryButton}>
-        <Button label="Escolher da galeria" icon="image-outline" secondary onPress={() => choosePhoto('library')} />
+        <Button label="Escolher da galeria" icon="image-outline" secondary disabled={isSaving} onPress={() => choosePhoto('library')} />
       </View>
 
       {selectedPhoto ? (
-        <Pressable onPress={() => setSelectedPhoto(null)}>
+        <Pressable onPress={() => setSelectedPhoto(null)} disabled={isSaving}>
           <Text style={styles.removePhoto}>Remover foto</Text>
         </Pressable>
       ) : null}
 
       <View style={styles.fields}>
-      <Field label="Nome completo" value="Ana Carolina" />
-      <Field label="E-mail" value="ana@email.com" />
-      <Field label="Telefone" value="(11) 99999-0000" />
-      <Field label="Endereço" value="Rua das Flores, 120" />
+      <Field label="Nome completo" value={name} onChangeText={setName} />
+      <Field label="E-mail" value={email} onChangeText={setEmail} keyboardType="email-address" />
+      <Field label="Telefone" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
+      <Field label="Endereço" value={address} onChangeText={setAddress} />
       </View>
 
-      <Button label="Salvar alterações" onPress={saveProfile} />
+      <Button
+        label={isSaving ? 'Salvando...' : 'Salvar alterações'}
+        disabled={isSaving}
+        onPress={saveProfile}
+      />
     </Screen>
   );
 }

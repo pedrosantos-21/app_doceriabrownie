@@ -1,23 +1,30 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { router } from 'expo-router';
 import { colors } from '../../../components/ui';
+import { useProfile } from '../../../context/ProfileContext';
 
 export default function PerfilTab() {
+  const { managerAvatarUri, managerProfile } = useProfile();
+
   return (
     <View style={styles.container}>
       <View style={styles.profileCard}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>F</Text>
+          {managerAvatarUri ? (
+            <Image source={{ uri: managerAvatarUri }} style={styles.avatarImage} />
+          ) : (
+            <Text style={styles.avatarText}>F</Text>
+          )}
         </View>
-        <Text style={styles.name}>Fernanda Souza</Text>
+        <Text style={styles.name}>{managerProfile.name}</Text>
         <Text style={styles.role}>Gerente da Doceria</Text>
       </View>
 
       <View style={styles.infoCard}>
         <Text style={styles.infoTitle}>Dados da loja</Text>
-        <Text style={styles.infoText}>Loja: Doceria Brownie</Text>
-        <Text style={styles.infoText}>Telefone: (11) 99888-7777</Text>
-        <Text style={styles.infoText}>Endereço: Rua do Chocolate, 45</Text>
+        <Text style={styles.infoText}>Loja: {managerProfile.storeName}</Text>
+        <Text style={styles.infoText}>Telefone: {managerProfile.phone}</Text>
+        <Text style={styles.infoText}>Endereço: {managerProfile.address}</Text>
       </View>
 
       <Pressable style={styles.button} onPress={() => router.push('/(tabs)/perfil/editar' as never)}>
@@ -53,6 +60,7 @@ const styles = StyleSheet.create({
     height: 88,
     borderRadius: 44,
     backgroundColor: colors.pale,
+    overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 14,
@@ -61,6 +69,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '800',
     color: colors.accent,
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
   },
   name: {
     fontSize: 24,
