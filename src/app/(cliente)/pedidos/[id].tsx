@@ -9,11 +9,20 @@ import {
   styles as ui,
 } from "../../../components/ui";
 import { useOrders } from "../../../context/OrdersContext";
+import { useProfile } from "../../../context/ProfileContext";
 
 export default function ClientOrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { orders } = useOrders();
-  const order = orders.find((item) => item.id === id);
+  const { clientProfile } = useProfile();
+  const order = orders.find(
+    (item) =>
+      item.id === id &&
+      (item.customerEmail?.trim().toLocaleLowerCase("pt-BR") ===
+        clientProfile.email.trim().toLocaleLowerCase("pt-BR") ||
+        item.customer.trim().toLocaleLowerCase("pt-BR") ===
+          clientProfile.name.trim().toLocaleLowerCase("pt-BR")),
+  );
 
   if (!order) {
     return (
@@ -34,7 +43,9 @@ export default function ClientOrderDetail() {
         <Text style={styles.kicker}>PEDIDO #{order.id}</Text>
         <Text style={styles.status}>{order.status}</Text>
         <Text style={styles.message}>
-          {order.status === "Em preparo"
+          {order.status === "Cancelado"
+            ? "Este pedido foi cancelado."
+            : order.status === "Em preparo"
             ? "Seu pedido está sendo preparado com carinho."
             : order.status === "Pronto"
               ? "Seu pedido está pronto e aguardando envio."
@@ -57,7 +68,7 @@ export default function ClientOrderDetail() {
       <View style={ui.card}>
         <Text style={styles.label}>Entrega</Text>
         <Text style={styles.address}>
-          Rua do Chocolate, 45{`\n`}São Paulo - SP
+          {clientProfile.address || "Endereço não informado no perfil."}
         </Text>
       </View>
     </Screen>

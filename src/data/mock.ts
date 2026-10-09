@@ -13,7 +13,8 @@ export type OrderStatus =
   | "Em preparo"
   | "Pronto"
   | "Enviado para entrega"
-  | "Entregue";
+  | "Entregue"
+  | "Cancelado";
 
 export type Order = {
   id: string;
@@ -23,6 +24,7 @@ export type Order = {
   total: number;
   time: string;
   color: string;
+  customerEmail?: string;
   notes?: string;
 };
 

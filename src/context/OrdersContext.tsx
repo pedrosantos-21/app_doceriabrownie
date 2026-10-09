@@ -18,11 +18,14 @@ const validStoredStatuses = [
   "Pronto",
   "Enviado para entrega",
   "Entregue",
+  "Cancelado",
   "A caminho",
   "Enviado para entrega...",
 ];
 
 type NewOrder = {
+  customer: string;
+  customerEmail: string;
   item: string;
   quantity: number;
   total: number;
@@ -34,6 +37,7 @@ type OrdersContextValue = {
   isOrdersLoaded: boolean;
   createOrder: (order: NewOrder) => Promise<Order>;
   updateOrderStatus: (orderId: string, status: OrderStatus) => Promise<void>;
+  cancelOrder: (orderId: string) => Promise<void>;
 };
 
 const OrdersContext = createContext<OrdersContextValue | undefined>(undefined);
@@ -49,6 +53,8 @@ function isOrder(value: unknown): value is Order {
     typeof order.total === "number" &&
     typeof order.time === "string" &&
     typeof order.color === "string" &&
+    (order.customerEmail === undefined ||
+      typeof order.customerEmail === "string") &&
     (order.notes === undefined || typeof order.notes === "string")
   );
 }
@@ -59,6 +65,7 @@ function normalizeOrderStatus(status: string): OrderStatus {
     case "Pronto":
     case "Enviado para entrega":
     case "Entregue":
+    case "Cancelado":
       return status;
     case "A caminho":
     case "Enviado para entrega...":
@@ -114,7 +121,8 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     }, now.getTime());
     const newOrder: Order = {
       id: `${lastUsedId + 1}`,
-      customer: "Ana Carolina",
+      customer: request.customer.trim(),
+      customerEmail: request.customerEmail.trim(),
       item: `${request.quantity} ${request.item}`,
       status: "Em preparo",
       total: request.total,
@@ -143,6 +151,15 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     if (!orders.some((order) => order.id === orderId)) {
       throw new Error("O pedido não foi encontrado.");
     }
+    if (orders.some((order) => order.id === orderId && order.status === "Cancelado")) {
+      throw new Error("Não é possível atualizar um pedido cancelado.");
+    }
+    if (orders.some((order) => order.id === orderId && order.status === "Entregue")) {
+      throw new Error("Não é possível alterar um pedido já entregue.");
+    }
+    if (status === "Cancelado") {
+      throw new Error("Use a ação de cancelamento do pedido.");
+    }
 
     const updatedOrders = orders.map((order) =>
       order.id === orderId ? { ...order, status } : order,
@@ -154,9 +171,34 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     setOrders(updatedOrders);
   };
 
+  const cancelOrder = async (orderId: string) => {
+    if (!isOrdersLoaded) {
+      throw new Error("Os pedidos ainda estão carregando. Tente novamente.");
+    }
+    const order = orders.find((item) => item.id === orderId);
+    if (!order) throw new Error("O pedido não foi encontrado.");
+    if (order.status === "Entregue" || order.status === "Cancelado") {
+      throw new Error("Este pedido não pode mais ser cancelado.");
+    }
+    const updatedOrders = orders.map((item) =>
+      item.id === orderId ? { ...item, status: "Cancelado" as const } : item,
+    );
+    await AsyncStorage.setItem(
+      ORDERS_STORAGE_KEY,
+      JSON.stringify(updatedOrders),
+    );
+    setOrders(updatedOrders);
+  };
+
   return (
     <OrdersContext.Provider
-      value={{ orders, isOrdersLoaded, createOrder, updateOrderStatus }}
+      value={{
+        orders,
+        isOrdersLoaded,
+        createOrder,
+        updateOrderStatus,
+        cancelOrder,
+      }}
     >
       {children}
     </OrdersContext.Provider>

@@ -13,7 +13,7 @@ import { useOrders } from "../../../context/OrdersContext";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus, cancelOrder } = useOrders();
   const [isUpdating, setIsUpdating] = useState(false);
   const order = orders.find((item) => item.id === id);
 
@@ -40,6 +40,32 @@ export default function OrderDetail() {
     }
   };
 
+  const confirmCancellation = () => {
+    Alert.alert(
+      "Cancelar pedido?",
+      "O cliente verá que este pedido foi cancelado.",
+      [
+        { text: "Manter pedido", style: "cancel" },
+        {
+          text: "Cancelar pedido",
+          style: "destructive",
+          onPress: () => {
+            setIsUpdating(true);
+            void cancelOrder(order.id)
+              .catch((error: unknown) => {
+                Alert.alert(
+                  "Não foi possível cancelar o pedido",
+                  error instanceof Error ? error.message : "Tente novamente.",
+                );
+              })
+              .finally(() => setIsUpdating(false));
+          },
+        },
+      ],
+    );
+  };
+  const isFinal = order.status === "Entregue" || order.status === "Cancelado";
+
   return (
     <Screen>
       <Header title="Detalhe do pedido" subtitle={`Pedido #${order.id}`} back />
@@ -48,7 +74,9 @@ export default function OrderDetail() {
           <Text style={styles.customer}>{order.customer}</Text>
           <Text style={styles.time}>{order.time}</Text>
         </View>
-        <Text style={styles.status}>{order.status}</Text>
+        <Text style={[styles.status, order.status === "Cancelado" && styles.cancelled]}>
+          {order.status}
+        </Text>
       </View>
       <View style={ui.card}>
         <Text style={styles.label}>Itens do pedido</Text>
@@ -67,35 +95,51 @@ export default function OrderDetail() {
       <View style={ui.card}>
         <Text style={styles.label}>Dados de entrega</Text>
         <Text style={styles.muted}>
-          Rua das Flores, 120{`\n`}São Paulo - SP{`\n`}Pagamento via Pix
+          {order.customerEmail
+            ? `Contato do cliente: ${order.customerEmail}\n`
+            : ""}
+          Combine endereço e pagamento diretamente com o cliente.
         </Text>
       </View>
-      <Text style={styles.statusHeading}>Atualizar status do pedido</Text>
-      <Button
-        label={isUpdating ? "Salvando..." : "Em preparo"}
-        secondary={order.status !== "Em preparo"}
-        disabled={isUpdating || order.status === "Em preparo"}
-        onPress={() => setStatus("Em preparo")}
-      />
-      <View style={styles.statusButton}>
-        <Button
-          label={isUpdating ? "Salvando..." : "Marcar como pronto"}
-          secondary={order.status !== "Pronto"}
-          disabled={isUpdating || order.status === "Pronto"}
-          onPress={() => setStatus("Pronto")}
-        />
-      </View>
-      <View style={styles.statusButton}>
-        <Button
-          label={isUpdating ? "Salvando..." : "Enviar para entrega"}
-          secondary={order.status !== "Enviado para entrega"}
-          disabled={isUpdating || order.status === "Enviado para entrega"}
-          onPress={() => setStatus("Enviado para entrega")}
-        />
-      </View>
-      <Pressable>
-        <Text style={styles.cancel}>Cancelar pedido</Text>
-      </Pressable>
+      {!isFinal ? (
+        <>
+          <Text style={styles.statusHeading}>Atualizar status do pedido</Text>
+          <Button
+            label={isUpdating ? "Salvando..." : "Em preparo"}
+            secondary={order.status !== "Em preparo"}
+            disabled={isUpdating || order.status === "Em preparo"}
+            onPress={() => setStatus("Em preparo")}
+          />
+          <View style={styles.statusButton}>
+            <Button
+              label={isUpdating ? "Salvando..." : "Marcar como pronto"}
+              secondary={order.status !== "Pronto"}
+              disabled={isUpdating || order.status === "Pronto"}
+              onPress={() => setStatus("Pronto")}
+            />
+          </View>
+          <View style={styles.statusButton}>
+            <Button
+              label={isUpdating ? "Salvando..." : "Enviar para entrega"}
+              secondary={order.status !== "Enviado para entrega"}
+              disabled={isUpdating || order.status === "Enviado para entrega"}
+              onPress={() => setStatus("Enviado para entrega")}
+            />
+          </View>
+          {order.status === "Enviado para entrega" ? (
+            <View style={styles.statusButton}>
+              <Button
+                label={isUpdating ? "Salvando..." : "Marcar como entregue"}
+                onPress={() => setStatus("Entregue")}
+                disabled={isUpdating}
+              />
+            </View>
+          ) : null}
+          <Pressable disabled={isUpdating} onPress={confirmCancellation}>
+            <Text style={styles.cancel}>Cancelar pedido</Text>
+          </Pressable>
+        </>
+      ) : null}
     </Screen>
   );
 }
@@ -112,6 +156,7 @@ const styles = StyleSheet.create({
   customer: { color: colors.ink, fontWeight: "800", fontSize: 18 },
   time: { color: colors.muted, marginTop: 5, fontSize: 12 },
   status: { color: colors.green, fontWeight: "800", fontSize: 12 },
+  cancelled: { color: colors.accent },
   label: {
     color: colors.ink,
     fontWeight: "800",

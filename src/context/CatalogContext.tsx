@@ -58,7 +58,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
         const storedCatalog = await AsyncStorage.getItem(CATALOG_STORAGE_KEY);
         if (storedCatalog) {
           const parsedCatalog: unknown = JSON.parse(storedCatalog);
-          if (!Array.isArray(parsedCatalog) || !parsedCatalog.every(isProduct)) {
+          if (
+            !Array.isArray(parsedCatalog) ||
+            !parsedCatalog.every(isProduct)
+          ) {
             throw new Error("O cardápio salvo está em um formato inválido.");
           }
           if (isMounted) setProducts(parsedCatalog);
@@ -141,7 +144,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
       try {
         await FileSystem.deleteAsync(previousPhoto, { idempotent: true });
       } catch (error) {
-        console.warn("Não foi possível remover a foto anterior do produto:", error);
+        console.warn(
+          "Não foi possível remover a foto anterior do produto:",
+          error,
+        );
       }
     }
 
@@ -154,7 +160,8 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     }
 
     const product = products.find((item) => item.id === id);
-    if (!product) throw new Error("O item que você tentou excluir não foi encontrado.");
+    if (!product)
+      throw new Error("O item que você tentou excluir não foi encontrado.");
 
     const updatedProducts = products.filter((item) => item.id !== id);
     await AsyncStorage.setItem(
@@ -171,7 +178,10 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
       try {
         await FileSystem.deleteAsync(product.photoUri, { idempotent: true });
       } catch (error) {
-        console.warn("Não foi possível remover a foto do produto excluído:", error);
+        console.warn(
+          "Não foi possível remover a foto do produto excluído:",
+          error,
+        );
       }
     }
   };

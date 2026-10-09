@@ -4,12 +4,14 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { Button, colors, Field, Header, Screen } from "../../../components/ui";
 import { useCatalog } from "../../../context/CatalogContext";
 import { useOrders } from "../../../context/OrdersContext";
+import { useProfile } from "../../../context/ProfileContext";
 
 export default function RequestItem() {
   const { productId } = useLocalSearchParams<{ productId?: string }>();
   const { products } = useCatalog();
   const product = products.find((item) => item.id === productId);
   const { createOrder, isOrdersLoaded } = useOrders();
+  const { clientProfile, isClientProfileLoaded } = useProfile();
   const [item, setItem] = useState(product?.name ?? "");
   const [quantity, setQuantity] = useState("1");
   const [notes, setNotes] = useState("");
@@ -17,8 +19,14 @@ export default function RequestItem() {
 
   const submitRequest = async () => {
     const count = Number(quantity);
-    if (!item.trim()) {
-      Alert.alert("Informe o item", "Digite o nome do doce que deseja solicitar.");
+    const selectedProduct = products.find(
+      (candidate) => candidate.name.trim().toLocaleLowerCase("pt-BR") === item.trim().toLocaleLowerCase("pt-BR"),
+    );
+    if (!selectedProduct) {
+      Alert.alert(
+        "Item sem preço cadastrado",
+        "Para registrar um pedido local, escolha um produto do cardápio. Itens personalizados precisam de orçamento e não serão registrados com valor zero.",
+      );
       return;
     }
     if (!Number.isInteger(count) || count < 1) {
@@ -29,9 +37,11 @@ export default function RequestItem() {
     setIsSubmitting(true);
     try {
       await createOrder({
-        item: item.trim(),
+        customer: clientProfile.name,
+        customerEmail: clientProfile.email,
+        item: selectedProduct.name,
         quantity: count,
-        total: (product?.price ?? 0) * count,
+        total: selectedProduct.price * count,
         notes,
       });
       router.replace("/(cliente)/pedidos" as never);
@@ -45,7 +55,7 @@ export default function RequestItem() {
     }
   };
 
-  if (!isOrdersLoaded) {
+  if (!isOrdersLoaded || !isClientProfileLoaded) {
     return (
       <Screen>
         <Header title="Solicitar item" subtitle="Carregando pedidos" back />
@@ -57,14 +67,14 @@ export default function RequestItem() {
     <Screen>
       <Header
         title="Solicitar item"
-        subtitle="Conte o que você gostaria"
+        subtitle="Selecione um produto do cardápio"
         back
       />
       <Field
         label="Item desejado"
         value={item}
         onChangeText={setItem}
-        placeholder="Ex.: Brownie sem açúcar"
+        placeholder="Produto cadastrado no cardápio"
       />
       <Field
         label="Quantidade"
@@ -80,9 +90,9 @@ export default function RequestItem() {
         multiline
       />
       <View style={styles.note}>
-        <Text style={styles.noteTitle}>Vamos analisar seu pedido</Text>
+        <Text style={styles.noteTitle}>Pedido local de demonstração</Text>
         <Text style={styles.noteText}>
-          A equipe responde pelo WhatsApp assim que receber sua solicitação.
+          O preço e o produto são registrados neste dispositivo. Solicitações personalizadas dependem de orçamento e não são enviadas a um servidor.
         </Text>
       </View>
       <Button

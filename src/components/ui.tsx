@@ -120,6 +120,8 @@ export function Field({
   multiline = false,
   onChangeText,
   keyboardType,
+  secureTextEntry = false,
+  autoCapitalize,
 }: {
   label: string;
   value?: string;
@@ -127,6 +129,8 @@ export function Field({
   multiline?: boolean;
   onChangeText?: (value: string) => void;
   keyboardType?: TextInputProps["keyboardType"];
+  secureTextEntry?: boolean;
+  autoCapitalize?: TextInputProps["autoCapitalize"];
 }) {
   return (
     <View style={styles.field}>
@@ -136,6 +140,8 @@ export function Field({
         defaultValue={onChangeText ? undefined : value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+        autoCapitalize={autoCapitalize}
         placeholder={placeholder}
         placeholderTextColor="#aa9a91"
         multiline={multiline}
