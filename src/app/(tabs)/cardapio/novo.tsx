@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -13,6 +14,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Button, colors, Field, Header, Screen } from "../../../components/ui";
 import { useCatalog } from "../../../context/CatalogContext";
+import { persistedImageUri } from "../../../utils/persistedImageUri";
 
 export default function ProductForm() {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -71,13 +73,16 @@ export default function ProductForm() {
         allowsEditing: true,
         aspect: [1, 1] as [number, number],
         quality: 0.8,
+        base64: Platform.OS === "web",
       };
       const result =
         source === "camera"
           ? await ImagePicker.launchCameraAsync(options)
           : await ImagePicker.launchImageLibraryAsync(options);
 
-      if (!result.canceled) setProductPhoto(result.assets[0].uri);
+      if (!result.canceled) {
+        setProductPhoto(persistedImageUri(result.assets[0]));
+      }
     } catch (error) {
       Alert.alert(
         "Não foi possível selecionar a foto",

@@ -136,6 +136,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       try {
         const storedUri = await AsyncStorage.getItem(CLIENT_AVATAR_STORAGE_KEY);
 
+        if (storedUri?.startsWith("blob:")) {
+          await AsyncStorage.removeItem(CLIENT_AVATAR_STORAGE_KEY);
+          if (isMounted) setAvatarUri(null);
+          return;
+        }
+
         if (
           storedUri &&
           FileSystem.documentDirectory &&
@@ -162,6 +168,12 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
         const storedUri = await AsyncStorage.getItem(
           MANAGER_AVATAR_STORAGE_KEY,
         );
+
+        if (storedUri?.startsWith("blob:")) {
+          await AsyncStorage.removeItem(MANAGER_AVATAR_STORAGE_KEY);
+          if (isMounted) setManagerAvatarUri(null);
+          return;
+        }
 
         if (
           storedUri &&

@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { money, type OrderStatus } from "../../../data/mock";
 import {
   Button,
@@ -13,8 +13,10 @@ import { useOrders } from "../../../context/OrdersContext";
 
 export default function OrderDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { orders, updateOrderStatus, cancelOrder } = useOrders();
+  const { orders, isOrdersLoaded, updateOrderStatus, cancelOrder } = useOrders();
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isCancellationVisible, setIsCancellationVisible] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
   const order = orders.find((item) => item.id === id);
 
   if (!order) {
@@ -28,41 +30,35 @@ export default function OrderDetail() {
 
   const setStatus = async (status: OrderStatus) => {
     setIsUpdating(true);
+    setActionError(null);
     try {
       await updateOrderStatus(order.id, status);
     } catch (error) {
-      Alert.alert(
-        "Não foi possível atualizar o pedido",
-        error instanceof Error ? error.message : "Tente novamente.",
+      setActionError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível atualizar o pedido. Tente novamente.",
       );
     } finally {
       setIsUpdating(false);
     }
   };
 
-  const confirmCancellation = () => {
-    Alert.alert(
-      "Cancelar pedido?",
-      "O cliente verá que este pedido foi cancelado.",
-      [
-        { text: "Manter pedido", style: "cancel" },
-        {
-          text: "Cancelar pedido",
-          style: "destructive",
-          onPress: () => {
-            setIsUpdating(true);
-            void cancelOrder(order.id)
-              .catch((error: unknown) => {
-                Alert.alert(
-                  "Não foi possível cancelar o pedido",
-                  error instanceof Error ? error.message : "Tente novamente.",
-                );
-              })
-              .finally(() => setIsUpdating(false));
-          },
-        },
-      ],
-    );
+  const confirmCancellation = async () => {
+    setIsUpdating(true);
+    setActionError(null);
+    try {
+      await cancelOrder(order.id);
+      setIsCancellationVisible(false);
+    } catch (error) {
+      setActionError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível cancelar o pedido. Tente novamente.",
+      );
+    } finally {
+      setIsUpdating(false);
+    }
   };
   const isFinal = order.status === "Entregue" || order.status === "Cancelado";
 
@@ -101,45 +97,117 @@ export default function OrderDetail() {
           Combine endereço e pagamento diretamente com o cliente.
         </Text>
       </View>
+      {actionError ? <Text style={styles.actionError}>{actionError}</Text> : null}
       {!isFinal ? (
         <>
           <Text style={styles.statusHeading}>Atualizar status do pedido</Text>
           <Button
-            label={isUpdating ? "Salvando..." : "Em preparo"}
+            label={
+              !isOrdersLoaded
+                ? "Carregando..."
+                : isUpdating
+                  ? "Salvando..."
+                  : "Em preparo"
+            }
             secondary={order.status !== "Em preparo"}
-            disabled={isUpdating || order.status === "Em preparo"}
+            disabled={
+              !isOrdersLoaded || isUpdating || order.status === "Em preparo"
+            }
             onPress={() => setStatus("Em preparo")}
           />
           <View style={styles.statusButton}>
             <Button
-              label={isUpdating ? "Salvando..." : "Marcar como pronto"}
+              label={
+                !isOrdersLoaded
+                  ? "Carregando..."
+                  : isUpdating
+                    ? "Salvando..."
+                    : "Marcar como pronto"
+              }
               secondary={order.status !== "Pronto"}
-              disabled={isUpdating || order.status === "Pronto"}
+              disabled={!isOrdersLoaded || isUpdating || order.status === "Pronto"}
               onPress={() => setStatus("Pronto")}
             />
           </View>
           <View style={styles.statusButton}>
             <Button
-              label={isUpdating ? "Salvando..." : "Enviar para entrega"}
+              label={
+                !isOrdersLoaded
+                  ? "Carregando..."
+                  : isUpdating
+                    ? "Salvando..."
+                    : "Enviar para entrega"
+              }
               secondary={order.status !== "Enviado para entrega"}
-              disabled={isUpdating || order.status === "Enviado para entrega"}
+              disabled={
+                !isOrdersLoaded ||
+                isUpdating ||
+                order.status === "Enviado para entrega"
+              }
               onPress={() => setStatus("Enviado para entrega")}
             />
           </View>
           {order.status === "Enviado para entrega" ? (
             <View style={styles.statusButton}>
               <Button
-                label={isUpdating ? "Salvando..." : "Marcar como entregue"}
+                label={
+                  !isOrdersLoaded
+                    ? "Carregando..."
+                    : isUpdating
+                      ? "Salvando..."
+                      : "Marcar como entregue"
+                }
                 onPress={() => setStatus("Entregue")}
-                disabled={isUpdating}
+                disabled={!isOrdersLoaded || isUpdating}
               />
             </View>
           ) : null}
-          <Pressable disabled={isUpdating} onPress={confirmCancellation}>
+          <Pressable
+            disabled={!isOrdersLoaded || isUpdating}
+            onPress={() => setIsCancellationVisible(true)}
+          >
             <Text style={styles.cancel}>Cancelar pedido</Text>
           </Pressable>
         </>
       ) : null}
+      <Modal
+        visible={isCancellationVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsCancellationVisible(false)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.confirmation}>
+            <Text style={styles.confirmationTitle}>Cancelar pedido?</Text>
+            <Text style={styles.confirmationMessage}>
+              O cliente verá que este pedido foi cancelado.
+            </Text>
+            {actionError ? (
+              <Text style={styles.confirmationError}>{actionError}</Text>
+            ) : null}
+            <View style={styles.confirmationActions}>
+              <Pressable
+                accessibilityRole="button"
+                disabled={isUpdating}
+                onPress={() => setIsCancellationVisible(false)}
+                style={[styles.confirmationButton, styles.keepButton]}
+              >
+                <Text style={styles.keepButtonText}>Manter pedido</Text>
+              </Pressable>
+              <Pressable
+                accessibilityRole="button"
+                disabled={isUpdating}
+                onPress={() => void confirmCancellation()}
+                style={[styles.confirmationButton, styles.cancelButton]}
+              >
+                <Text style={styles.cancelButtonText}>
+                  {isUpdating ? "Cancelando..." : "Cancelar pedido"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </Screen>
   );
 }
@@ -188,4 +256,58 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     marginTop: 18,
   },
+  actionError: {
+    color: "#b42318",
+    backgroundColor: "#fff0ee",
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(30, 12, 18, 0.55)",
+    padding: 24,
+  },
+  confirmation: {
+    width: "100%",
+    maxWidth: 420,
+    backgroundColor: colors.white,
+    borderRadius: 20,
+    padding: 22,
+  },
+  confirmationTitle: {
+    color: colors.ink,
+    fontSize: 20,
+    fontWeight: "800",
+  },
+  confirmationMessage: {
+    color: colors.muted,
+    lineHeight: 22,
+    marginTop: 8,
+  },
+  confirmationError: {
+    color: "#b42318",
+    marginTop: 12,
+    lineHeight: 20,
+  },
+  confirmationActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    flexWrap: "wrap",
+    gap: 10,
+    marginTop: 22,
+  },
+  confirmationButton: {
+    minHeight: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 14,
+    borderRadius: 12,
+  },
+  keepButton: { backgroundColor: colors.pale },
+  keepButtonText: { color: colors.accent, fontWeight: "800" },
+  cancelButton: { backgroundColor: colors.accent },
+  cancelButtonText: { color: colors.white, fontWeight: "800" },
 });

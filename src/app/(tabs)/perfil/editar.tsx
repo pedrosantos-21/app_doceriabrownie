@@ -1,9 +1,10 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Button, colors, Field, Header, Screen } from '../../../components/ui';
 import { useProfile } from '../../../context/ProfileContext';
+import { persistedImageUri } from '../../../utils/persistedImageUri';
 
 export default function EditManagerProfile() {
   const {
@@ -55,6 +56,7 @@ export default function EditManagerProfile() {
         allowsEditing: true,
         aspect: [1, 1] as [number, number],
         quality: 0.8,
+        base64: Platform.OS === 'web',
       };
       const result = source === 'camera'
         ? await ImagePicker.launchCameraAsync({
@@ -63,7 +65,9 @@ export default function EditManagerProfile() {
           })
         : await ImagePicker.launchImageLibraryAsync(options);
 
-      if (!result.canceled) setSelectedPhoto(result.assets[0].uri);
+      if (!result.canceled) {
+        setSelectedPhoto(persistedImageUri(result.assets[0]));
+      }
     } catch (error) {
       Alert.alert(
         'Não foi possível selecionar a foto',

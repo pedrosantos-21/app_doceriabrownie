@@ -64,7 +64,22 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
           ) {
             throw new Error("O cardápio salvo está em um formato inválido.");
           }
-          if (isMounted) setProducts(parsedCatalog);
+          // Blob URLs expire when the browser session ends.
+          const hasTemporaryPhotos = parsedCatalog.some((product) =>
+            product.photoUri?.startsWith("blob:"),
+          );
+          const migratedCatalog = parsedCatalog.map((product) =>
+            product.photoUri?.startsWith("blob:")
+              ? { ...product, photoUri: undefined }
+              : product,
+          );
+          if (hasTemporaryPhotos) {
+            await AsyncStorage.setItem(
+              CATALOG_STORAGE_KEY,
+              JSON.stringify(migratedCatalog),
+            );
+          }
+          if (isMounted) setProducts(migratedCatalog);
         }
       } catch (error) {
         console.error("Não foi possível carregar o cardápio local:", error);
