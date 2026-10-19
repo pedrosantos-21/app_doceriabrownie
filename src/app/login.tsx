@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -24,8 +24,9 @@ const loginSchema = Yup.object({
 });
 
 export default function LoginScreen() {
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
   const [showPassword, setShowPassword] = useState(false);
-  const [clientMode, setClientMode] = useState(false);
+  const [clientMode, setClientMode] = useState(mode === "cliente");
   const {
     authenticateClient,
     clientProfile,
@@ -47,7 +48,10 @@ export default function LoginScreen() {
         </Text>
 
         <Formik
-          initialValues={{ email: "admin@doceria.com", senha: "123456" }}
+          initialValues={{
+            email: clientMode ? clientProfile.email : "admin@doceria.com",
+            senha: clientMode ? "" : "123456",
+          }}
           validationSchema={loginSchema}
           onSubmit={async (values, { setFieldError, setSubmitting }) => {
             try {

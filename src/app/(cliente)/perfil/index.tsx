@@ -34,7 +34,7 @@ export default function ClientProfile() {
         />
       </View>
 
-      <Pressable onPress={() => router.replace('/login')}>
+      <Pressable onPress={() => router.replace('/')}>
         <Text style={styles.logout}>Sair da conta</Text>
       </Pressable>
     </Screen>

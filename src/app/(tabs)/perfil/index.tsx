@@ -30,7 +30,7 @@ export default function PerfilTab() {
       <Pressable style={styles.button} onPress={() => router.push('/(tabs)/perfil/editar' as never)}>
         <Text style={styles.buttonText}>Editar dados</Text>
       </Pressable>
-      <Pressable style={[styles.button, styles.logoutButton]} onPress={() => router.replace('/login')}>
+      <Pressable style={[styles.button, styles.logoutButton]} onPress={() => router.replace('/')}>
         <Text style={[styles.buttonText, styles.logoutText]}>Sair</Text>
       </Pressable>
     </View>
