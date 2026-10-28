@@ -1,3 +1,5 @@
+/** app/ -> Diretorio responsável por telas e rotas do Expo Router */
+
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { ProfileProvider } from "../context/ProfileContext";
@@ -22,3 +24,5 @@ export default function RootLayout() {
     </ProfileProvider>
   );
 }
+
+
