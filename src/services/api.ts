@@ -1,3 +1,17 @@
+/* //NOTA: Linha 2 importa a biblioteca Axios instalada no projeto. Ela fornece funções para fazer requisições HTTP, como get, post, put, patch e delete.*/
+import axios from "axios";
+
+//NOTA: Linha 5 em diante. [axios.create(...)] Cria uma instância independente e configurável do Axios. */
+//NOTA: [baseURL] Define a URL base para todas as chamdas da instância. O valor vem do [.env] atravéz do [process.env]
+export const api = axios.create({
+    baseURL: process.env.EXPO_PUBLIC_API_URL,
+    timeout: 10_000, //Tempo máximo de espera por uma resposta: 10.000 milissegundos.
+    headers: {
+        "Content-Type": "application/json", //Define o formato padrão para o cabeçalho HTTP nesse caso, JSON.
+    },
+});
+
+
 /* src/services/api.ts: 
     ===========================================================================================================
    1º Configuração única do Axios
